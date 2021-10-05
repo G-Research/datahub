@@ -17,14 +17,14 @@ INSERT INTO metadata_aspect_v2 (urn, aspect, version, metadata, createdon, creat
   0,
   '{"displayName":"Data Hub","active":true,"fullName":"Data Hub","email":"datahub@linkedin.com"}',
   now(),
-  'urn:li:corpuser:__datahub_system'
+  'urn:li:principal:datahub'
 ), (
   'urn:li:corpuser:datahub',
   'corpUserEditableInfo',
   0,
   '{"skills":[],"teams":[],"pictureLink":"https://raw.githubusercontent.com/linkedin/datahub/master/datahub-web-react/src/images/default_avatar.png"}',
   now(),
-  'urn:li:corpuser:__datahub_system'
+  'urn:li:principal:datahub'
 );
 
 -- create metadata index table
