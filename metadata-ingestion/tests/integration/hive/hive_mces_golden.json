@@ -95,8 +95,7 @@
                             }
                         ],
                         "primaryKeys": null,
-                        "foreignKeysSpecs": null,
-                        "foreignKeys": null
+                        "foreignKeysSpecs": null
                     }
                 }
             ]
@@ -205,8 +204,7 @@
                             }
                         ],
                         "primaryKeys": null,
-                        "foreignKeysSpecs": null,
-                        "foreignKeys": null
+                        "foreignKeysSpecs": null
                     }
                 }
             ]
@@ -314,8 +312,7 @@
                             }
                         ],
                         "primaryKeys": null,
-                        "foreignKeysSpecs": null,
-                        "foreignKeys": null
+                        "foreignKeysSpecs": null
                     }
                 }
             ]
@@ -424,8 +421,7 @@
                             }
                         ],
                         "primaryKeys": null,
-                        "foreignKeysSpecs": null,
-                        "foreignKeys": null
+                        "foreignKeysSpecs": null
                     }
                 }
             ]

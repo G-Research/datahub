@@ -22,7 +22,6 @@ from ......schema_classes import MLModelDeploymentKeyClass
 from ......schema_classes import MLModelGroupKeyClass
 from ......schema_classes import MLModelKeyClass
 from ......schema_classes import MLPrimaryKeyKeyClass
-from ......schema_classes import SchemaFieldKeyClass
 from ......schema_classes import TagKeyClass
 
 
@@ -44,6 +43,5 @@ MLModelDeploymentKey = MLModelDeploymentKeyClass
 MLModelGroupKey = MLModelGroupKeyClass
 MLModelKey = MLModelKeyClass
 MLPrimaryKeyKey = MLPrimaryKeyKeyClass
-SchemaFieldKey = SchemaFieldKeyClass
 TagKey = TagKeyClass
 # fmt: on

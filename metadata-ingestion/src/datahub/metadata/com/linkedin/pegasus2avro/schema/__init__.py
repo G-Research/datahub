@@ -15,7 +15,6 @@ from .....schema_classes import EditableSchemaMetadataClass
 from .....schema_classes import EnumTypeClass
 from .....schema_classes import EspressoSchemaClass
 from .....schema_classes import FixedTypeClass
-from .....schema_classes import ForeignKeyConstraintClass
 from .....schema_classes import ForeignKeySpecClass
 from .....schema_classes import KafkaSchemaClass
 from .....schema_classes import KeyValueSchemaClass
@@ -49,7 +48,6 @@ EditableSchemaMetadata = EditableSchemaMetadataClass
 EnumType = EnumTypeClass
 EspressoSchema = EspressoSchemaClass
 FixedType = FixedTypeClass
-ForeignKeyConstraint = ForeignKeyConstraintClass
 ForeignKeySpec = ForeignKeySpecClass
 KafkaSchema = KafkaSchemaClass
 KeyValueSchema = KeyValueSchemaClass
