@@ -377,7 +377,6 @@ export const dataset3 = {
         },
         datasetUrn: 'urn:li:dataset:3',
         primaryKeys: [],
-        foreignKeys: [],
     },
     previousSchemaMetadata: null,
     editableSchemaMetadata: null,
