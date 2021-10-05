@@ -44,7 +44,10 @@ def write_datahub_config(host: str, token: Optional[str]) -> None:
 
 
 def should_skip_config() -> bool:
-    return os.getenv(ENV_SKIP_CONFIG, False) == "True"
+    try:
+        return os.environ[ENV_SKIP_CONFIG] == "True"
+    except KeyError:
+        return False
 
 
 def ensure_datahub_config() -> None:
