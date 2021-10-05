@@ -195,7 +195,6 @@ class ViewFieldType(Enum):
     DIMENSION = "Dimension"
     DIMENSION_GROUP = "Dimension Group"
     MEASURE = "Measure"
-    UNKNOWN = "Unknown"
 
 
 @dataclass
@@ -273,7 +272,6 @@ class LookerUtil:
         "running_total": NumberTypeClass,
         "sum": NumberTypeClass,
         "sum_distinct": NumberTypeClass,
-        "unknown": NullTypeClass,
     }
 
     @staticmethod
@@ -313,9 +311,7 @@ class LookerUtil:
         schema_name: str,
         view_fields: List[ViewField],
         reporter: SourceReport,
-    ) -> Optional[SchemaMetadataClass]:
-        if view_fields == []:
-            return None
+    ) -> SchemaMetadataClass:
         fields, primary_keys = LookerUtil._get_fields_and_primary_keys(
             view_fields=view_fields, reporter=reporter
         )
@@ -341,7 +337,6 @@ class LookerUtil:
             TEMPORAL_TAG_URN,
         ],
         ViewFieldType.MEASURE: [MEASURE_TAG_URN],
-        ViewFieldType.UNKNOWN: [],
     }
 
     tag_definitions: Dict[str, TagPropertiesClass] = {
@@ -390,7 +385,7 @@ class LookerUtil:
         else:
             reporter.report_warning(
                 "lookml",
-                f"Failed to map view field type {field_type}. Won't emit tags for it",
+                "Failed to map view field type {field_type}. Won't emit tags for it",
             )
             return None
 
@@ -423,7 +418,6 @@ class LookerUtil:
                 )
                 if tag_measures_and_dimensions is True
                 else None,
-                isPartOfKey=field.is_primary_key,
             )
             fields.append(schema_field)
             if field.is_primary_key:
@@ -671,8 +665,7 @@ class LookerExplore:
                 view_fields=self.fields,
                 reporter=reporter,
             )
-            if schema_metadata is not None:
-                dataset_snapshot.aspects.append(schema_metadata)
+            dataset_snapshot.aspects.append(schema_metadata)
 
         mce = MetadataChangeEvent(proposedSnapshot=dataset_snapshot)
         return mce
