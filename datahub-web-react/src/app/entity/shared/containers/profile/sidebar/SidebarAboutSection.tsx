@@ -5,7 +5,7 @@ import { LinkOutlined, EditOutlined } from '@ant-design/icons';
 import StripMarkdownText from '../../../components/styled/StripMarkdownText';
 
 import { EMPTY_MESSAGES } from '../../../constants';
-import { useEntityData, useRefetch, useRouteToTab } from '../../../EntityContext';
+import { useEntityData, useRouteToTab } from '../../../EntityContext';
 import { SidebarHeader } from './SidebarHeader';
 import { AddLinkModal } from '../../../components/styled/AddLinkModal';
 
@@ -38,7 +38,6 @@ const LinkButton = styled(Button)`
 
 export const SidebarAboutSection = () => {
     const { entityData } = useEntityData();
-    const refetch = useRefetch();
     const routeToTab = useRouteToTab();
 
     const description = entityData?.editableProperties?.description || entityData?.description;
@@ -72,7 +71,7 @@ export const SidebarAboutSection = () => {
                     >
                         <EditOutlined /> Add Documentation
                     </SpacedButton>
-                    <AddLinkModal refetch={refetch} />
+                    <AddLinkModal />
                 </>
             )}
             {description && (
@@ -94,15 +93,13 @@ export const SidebarAboutSection = () => {
                     {(links || []).map((link) => (
                         <LinkButton type="link" href={link.url} target="_blank" rel="noreferrer">
                             <LinkOutlined />
-                            {link.description || link.label}
+                            {link.description}
                         </LinkButton>
                     ))}
-                    <AddLinkModal buttonProps={{ type: 'text' }} refetch={refetch} />
+                    <AddLinkModal buttonProps={{ type: 'text' }} />
                 </SidebarLinkList>
             ) : (
-                <SidebarLinkList>
-                    {!isUntouched && <AddLinkModal buttonProps={{ type: 'text' }} refetch={refetch} />}
-                </SidebarLinkList>
+                <SidebarLinkList>{!isUntouched && <AddLinkModal buttonProps={{ type: 'text' }} />}</SidebarLinkList>
             )}
         </div>
     );

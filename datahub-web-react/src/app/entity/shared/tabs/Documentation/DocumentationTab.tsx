@@ -13,7 +13,7 @@ import { EmptyTab } from '../../components/styled/EmptyTab';
 
 import { DescriptionEditor } from './components/DescriptionEditor';
 import { LinkList } from './components/LinkList';
-import { useEntityData, useRefetch, useRouteToTab } from '../../EntityContext';
+import { useEntityData, useRouteToTab } from '../../EntityContext';
 
 const DocumentationContainer = styled.div`
     margin: 0 auto;
@@ -23,7 +23,6 @@ const DocumentationContainer = styled.div`
 
 export const DocumentationTab = () => {
     const { entityData } = useEntityData();
-    const refetch = useRefetch();
     const description = entityData?.editableProperties?.description || entityData?.description || '';
     const links = entityData?.institutionalMemory?.elements || [];
 
@@ -46,7 +45,7 @@ export const DocumentationTab = () => {
                             >
                                 <EditOutlined /> Edit
                             </Button>
-                            <AddLinkModal buttonProps={{ type: 'text' }} refetch={refetch} />
+                            <AddLinkModal buttonProps={{ type: 'text' }} />
                         </div>
                     </TabToolbar>
                     <DocumentationContainer>
@@ -56,7 +55,7 @@ export const DocumentationTab = () => {
                             <Typography.Text type="secondary">No documentation added yet.</Typography.Text>
                         )}
                         <Divider />
-                        <LinkList refetch={refetch} />
+                        <LinkList />
                     </DocumentationContainer>
                 </>
             ) : (
@@ -64,7 +63,7 @@ export const DocumentationTab = () => {
                     <Button onClick={() => routeToTab({ tabName: 'Documentation', tabParams: { editing: true } })}>
                         <EditOutlined /> Add Documentation
                     </Button>
-                    <AddLinkModal refetch={refetch} />
+                    <AddLinkModal />
                 </EmptyTab>
             )}
         </>

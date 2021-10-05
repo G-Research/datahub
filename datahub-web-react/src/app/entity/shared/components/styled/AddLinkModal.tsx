@@ -2,19 +2,15 @@ import React, { useState } from 'react';
 import { message, Modal, Button, Form, Input } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useGetAuthenticatedUser } from '../../../../useGetAuthenticatedUser';
-import { useEntityData } from '../../EntityContext';
-import { useAddLinkMutation } from '../../../../../graphql/mutations.generated';
 
-type AddLinkProps = {
-    buttonProps?: Record<string, unknown>;
-    refetch?: () => Promise<any>;
-};
+import { GenericEntityUpdate } from '../../types';
+import { useEntityData, useEntityUpdate } from '../../EntityContext';
 
-export const AddLinkModal = ({ buttonProps, refetch }: AddLinkProps) => {
+export const AddLinkModal = ({ buttonProps }: { buttonProps?: Record<string, unknown> }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const user = useGetAuthenticatedUser();
-    const { urn } = useEntityData();
-    const [addLinkMutation] = useAddLinkMutation();
+    const { urn, entityData } = useEntityData();
+    const updateEntity = useEntityUpdate<GenericEntityUpdate>();
 
     const [form] = Form.useForm();
 
@@ -29,9 +25,26 @@ export const AddLinkModal = ({ buttonProps, refetch }: AddLinkProps) => {
 
     const handleAdd = async (formData: any) => {
         if (user?.corpUser.urn) {
+            const links = entityData?.institutionalMemory?.elements || [];
+
+            const newLinks = links.map((link) => {
+                return {
+                    author: link.author.urn,
+                    url: link.url,
+                    description: link.description,
+                    createdAt: link.created.time,
+                };
+            });
+
+            newLinks.push({
+                author: user?.corpUser.urn,
+                createdAt: Date.now(),
+                ...formData,
+            });
+
             try {
-                await addLinkMutation({
-                    variables: { input: { linkUrl: formData.url, label: formData.label, resourceUrn: urn } },
+                await updateEntity({
+                    variables: { urn, input: { institutionalMemory: { elements: newLinks } } },
                 });
                 message.success({ content: 'Link Added', duration: 2 });
             } catch (e: unknown) {
@@ -40,7 +53,7 @@ export const AddLinkModal = ({ buttonProps, refetch }: AddLinkProps) => {
                     message.error({ content: `Failed to add link: \n ${e.message || ''}`, duration: 3 });
                 }
             }
-            refetch?.();
+
             handleClose();
         } else {
             message.error({ content: `Error adding link: no user`, duration: 2 });
@@ -84,7 +97,7 @@ export const AddLinkModal = ({ buttonProps, refetch }: AddLinkProps) => {
                         <Input placeholder="https://" autoFocus />
                     </Form.Item>
                     <Form.Item
-                        name="label"
+                        name="description"
                         label="Label"
                         rules={[
                             {

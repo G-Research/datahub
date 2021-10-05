@@ -40,9 +40,7 @@ export class MLFeatureTableEntity implements Entity<MlFeatureTable> {
 
     getPathName = () => 'featureTables';
 
-    getEntityName = () => 'Feature Table';
-
-    getCollectionName = () => 'Feature Tables';
+    getCollectionName = () => 'Feature tables';
 
     renderProfile = (urn: string) => <MLFeatureTableProfile urn={urn} />;
 

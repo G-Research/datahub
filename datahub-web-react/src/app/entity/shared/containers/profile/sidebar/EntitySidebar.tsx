@@ -22,6 +22,7 @@ type Props = {
 export const EntitySidebar = <T,>({ sidebarSections }: Props) => {
     const { entityData } = useEntityData();
     const baseEntity = useBaseEntity<T>();
+
     return (
         <ContentContainer>
             {sidebarSections?.map((section) => {

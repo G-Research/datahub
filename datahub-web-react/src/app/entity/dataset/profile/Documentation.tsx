@@ -82,7 +82,6 @@ export default function Documentation({
         const newDoc = {
             url: '',
             description: '',
-            label: '',
             author: { urn: authorUrn, username: authorUsername, type: EntityType.CorpUser },
             created: {
                 time: Date.now(),

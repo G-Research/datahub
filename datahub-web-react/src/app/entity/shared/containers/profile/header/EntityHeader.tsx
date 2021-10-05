@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { capitalizeFirstLetter } from '../../../../../shared/capitalizeFirstLetter';
-import { useEntityRegistry } from '../../../../../useEntityRegistry';
 import { ANTD_GRAY } from '../../../constants';
 import { useEntityData } from '../../../EntityContext';
 import { useEntityPath } from '../utils';
@@ -58,14 +57,14 @@ const MainHeaderContent = styled.div`
 
 export const EntityHeader = () => {
     const { urn, entityType, entityData } = useEntityData();
-    const entityRegistry = useEntityRegistry();
 
     const platformName = capitalizeFirstLetter(entityData?.platform?.name);
     const platformLogoUrl = entityData?.platform?.info?.logoUrl;
-    const entityTypeCased = entityRegistry.getEntityName(entityType);
+    const entityTypeCased = entityType[0] + entityType.slice(1).toLowerCase();
     const entityPath = useEntityPath(entityType, urn);
     const externalUrl = entityData?.externalUrl || undefined;
     const hasExternalUrl = !!externalUrl;
+
     return (
         <HeaderContainer>
             <MainHeaderContent>

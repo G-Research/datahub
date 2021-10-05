@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { message, Button, List, Typography } from 'antd';
 import { LinkOutlined, DeleteOutlined } from '@ant-design/icons';
+
 import { EntityType } from '../../../../../../types.generated';
-import { useEntityData } from '../../../EntityContext';
+import { GenericEntityUpdate } from '../../../types';
+import { useEntityData, useEntityUpdate } from '../../../EntityContext';
+
 import { useEntityRegistry } from '../../../../../useEntityRegistry';
 import { ANTD_GRAY } from '../../../constants';
 import { formatDateString } from '../../../containers/profile/utils';
-import { useRemoveLinkMutation } from '../../../../../../graphql/mutations.generated';
 
 const LinkListItem = styled(List.Item)`
     border-radius: 5px;
@@ -28,29 +30,35 @@ const ListOffsetIcon = styled.span`
     margin-right: 6px;
 `;
 
-type LinkListProps = {
-    refetch?: () => Promise<any>;
-};
-
-export const LinkList = ({ refetch }: LinkListProps) => {
+export const LinkList = () => {
     const { urn, entityData } = useEntityData();
+    const updateEntity = useEntityUpdate<GenericEntityUpdate>();
     const entityRegistry = useEntityRegistry();
-    const [removeLinkMutation] = useRemoveLinkMutation();
+
     const links = entityData?.institutionalMemory?.elements || [];
 
-    const handleDeleteLink = async (linkUrl: string) => {
+    const handleDeleteLink = async (index: number) => {
+        const newLinks = links.map((link) => {
+            return {
+                author: link.author.urn,
+                url: link.url,
+                description: link.description,
+                createdAt: link.created.time,
+            };
+        });
+        newLinks.splice(index, 1);
+
         try {
-            await removeLinkMutation({
-                variables: { input: { linkUrl, resourceUrn: urn } },
+            await updateEntity({
+                variables: { urn, input: { institutionalMemory: { elements: newLinks } } },
             });
-            message.success({ content: 'Link Removed', duration: 2 });
+            message.success({ content: 'Link Deleted', duration: 2 });
         } catch (e: unknown) {
             message.destroy();
             if (e instanceof Error) {
-                message.error({ content: `Error removing link: \n ${e.message || ''}`, duration: 2 });
+                message.error({ content: `Error deleting link: \n ${e.message || ''}`, duration: 2 });
             }
         }
-        refetch?.();
     };
 
     return entityData ? (
@@ -59,10 +67,10 @@ export const LinkList = ({ refetch }: LinkListProps) => {
                 <List
                     size="large"
                     dataSource={links}
-                    renderItem={(link) => (
+                    renderItem={(link, index) => (
                         <LinkListItem
                             extra={
-                                <Button onClick={() => handleDeleteLink(link.url)} type="text" shape="circle" danger>
+                                <Button onClick={() => handleDeleteLink(index)} type="text" shape="circle" danger>
                                     <DeleteOutlined />
                                 </Button>
                             }
@@ -74,7 +82,7 @@ export const LinkList = ({ refetch }: LinkListProps) => {
                                             <ListOffsetIcon>
                                                 <LinkOutlined />
                                             </ListOffsetIcon>
-                                            {link.description || link.label}
+                                            {link.description}
                                         </a>
                                     </Typography.Title>
                                 }

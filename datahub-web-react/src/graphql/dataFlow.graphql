@@ -23,49 +23,31 @@ fragment dataFlowFields on DataFlow {
     globalTags {
         ...globalTagsFields
     }
-    institutionalMemory {
-        elements {
-            url
-            author {
-                urn
-                username
-            }
-            label
-            created {
-                time
-                actor
-            }
-        }
-    }
-    glossaryTerms {
-        ...glossaryTerms
-    }
 }
 
 query getDataFlow($urn: String!) {
     dataFlow(urn: $urn) {
         ...dataFlowFields
-        childJobs: relationships(input: { types: ["IsPartOf"], direction: INCOMING, start: 0, count: 100 }) {
-            start
-            count
-            total
-            relationships {
+        dataJobs {
+            entities {
                 entity {
+                    urn
+                    type
                     ... on DataJob {
                         urn
                         type
                         jobId
-                        dataFlow {
-                            urn
-                            type
-                            orchestrator
-                        }
                         ownership {
                             ...ownershipFields
                         }
                         info {
                             name
                             description
+                            externalUrl
+                            customProperties {
+                                key
+                                value
+                            }
                         }
                         editableProperties {
                             description
@@ -73,8 +55,10 @@ query getDataFlow($urn: String!) {
                         globalTags {
                             ...globalTagsFields
                         }
-                        glossaryTerms {
-                            ...glossaryTerms
+                        inputOutput {
+                            inputDatajobs {
+                                urn
+                            }
                         }
                     }
                 }
@@ -86,5 +70,17 @@ query getDataFlow($urn: String!) {
 mutation updateDataFlow($urn: String!, $input: DataFlowUpdateInput!) {
     updateDataFlow(urn: $urn, input: $input) {
         ...dataFlowFields
+        dataJobs {
+            entities {
+                entity {
+                    urn
+                    type
+                    ... on DataJob {
+                        ...dataJobFields
+                        ...shallowLineageFields
+                    }
+                }
+            }
+        }
     }
 }

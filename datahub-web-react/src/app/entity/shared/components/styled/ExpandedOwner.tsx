@@ -1,17 +1,16 @@
-import { message, Modal, Tag } from 'antd';
+import { Modal, Tag } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useRemoveOwnerMutation } from '../../../../../graphql/mutations.generated';
 
-import { Owner } from '../../../../../types.generated';
+import { Maybe, Owner, OwnershipUpdate } from '../../../../../types.generated';
 import { CustomAvatar } from '../../../../shared/avatar';
 import { useEntityRegistry } from '../../../../useEntityRegistry';
 
 type Props = {
-    entityUrn: string;
     owner: Owner;
-    refetch?: () => Promise<any>;
+    owners: Maybe<Owner[]> | undefined;
+    updateOwnership: (update: OwnershipUpdate) => void;
 };
 
 const OwnerTag = styled(Tag)`
@@ -22,9 +21,8 @@ const OwnerTag = styled(Tag)`
     align-items: center;
 `;
 
-export const ExpandedOwner = ({ entityUrn, owner, refetch }: Props) => {
+export const ExpandedOwner = ({ owner, updateOwnership, owners }: Props) => {
     const entityRegistry = useEntityRegistry();
-    const [removeOwnerMutation] = useRemoveOwnerMutation();
 
     let name = '';
     if (owner.owner.__typename === 'CorpGroup') {
@@ -36,24 +34,18 @@ export const ExpandedOwner = ({ entityUrn, owner, refetch }: Props) => {
 
     const pictureLink = (owner.owner.__typename === 'CorpUser' && owner.owner.editableInfo?.pictureLink) || undefined;
 
-    const onDelete = async () => {
-        try {
-            await removeOwnerMutation({
-                variables: {
-                    input: {
-                        ownerUrn: owner.owner.urn,
-                        resourceUrn: entityUrn,
-                    },
-                },
-            });
-            message.success({ content: 'Owner Removed', duration: 2 });
-        } catch (e: unknown) {
-            message.destroy();
-            if (e instanceof Error) {
-                message.error({ content: `Failed to remove owner: \n ${e.message || ''}`, duration: 3 });
-            }
+    const onDelete = () => {
+        if (updateOwnership) {
+            const updatedOwners =
+                owners
+                    ?.filter((someOwner) => !(someOwner.owner.urn === owner.owner.urn && someOwner.type === owner.type))
+                    ?.map((someOwner) => ({
+                        owner: someOwner.owner.urn,
+                        type: someOwner.type,
+                    })) || [];
+
+            updateOwnership({ owners: updatedOwners });
         }
-        refetch?.();
     };
 
     const onClose = (e) => {

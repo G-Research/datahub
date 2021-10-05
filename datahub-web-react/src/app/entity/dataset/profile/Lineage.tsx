@@ -21,6 +21,7 @@ export default function Lineage({ upstreamLineage, downstreamLineage }: Props) {
     const entityRegistry = useEntityRegistry();
     const history = useHistory();
     const location = useLocation();
+
     const upstreamEntities = upstreamLineage?.entities?.map((entityRelationship) => entityRelationship?.entity);
     const downstreamEntities = downstreamLineage?.entities?.map((entityRelationship) => entityRelationship?.entity);
 

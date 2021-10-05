@@ -36,13 +36,7 @@ export const EntityPage = ({ entityType }: Props) => {
     }, [entityType, urn]);
 
     // show new page for datasets
-    if (
-        entityType === EntityType.Dataset ||
-        entityType === EntityType.Dashboard ||
-        entityType === EntityType.Chart ||
-        entityType === EntityType.DataFlow ||
-        entityType === EntityType.DataJob
-    ) {
+    if (entityType === EntityType.Dataset) {
         return <SearchablePage>{entityRegistry.renderProfile(entityType, urn)}</SearchablePage>;
     }
 
