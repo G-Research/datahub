@@ -5107,12 +5107,12 @@ class SchemaFieldKeyClass(DictWrapper):
     
     RECORD_SCHEMA = get_schema_type("com.linkedin.pegasus2avro.metadata.key.SchemaFieldKey")
     def __init__(self,
-        parent: str,
+        dataset: str,
         fieldPath: str,
     ):
         super().__init__()
         
-        self.parent = parent
+        self.dataset = dataset
         self.fieldPath = fieldPath
     
     @classmethod
@@ -5123,19 +5123,19 @@ class SchemaFieldKeyClass(DictWrapper):
         return self
     
     def _restore_defaults(self) -> None:
-        self.parent = str()
+        self.dataset = str()
         self.fieldPath = str()
     
     
     @property
-    def parent(self) -> str:
-        """Getter: Parent associated with the schema field"""
-        return self._inner_dict.get('parent')  # type: ignore
+    def dataset(self) -> str:
+        """Getter: Dataset associated with the schema field"""
+        return self._inner_dict.get('dataset')  # type: ignore
     
-    @parent.setter
-    def parent(self, value: str) -> None:
-        """Setter: Parent associated with the schema field"""
-        self._inner_dict['parent'] = value
+    @dataset.setter
+    def dataset(self, value: str) -> None:
+        """Setter: Dataset associated with the schema field"""
+        self._inner_dict['dataset'] = value
     
     
     @property

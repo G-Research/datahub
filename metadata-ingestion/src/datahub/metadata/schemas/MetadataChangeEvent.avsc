@@ -5632,9 +5632,9 @@
                     "doc": "Key for a SchemaField",
                     "fields": [
                       {
-                        "name": "parent",
+                        "name": "dataset",
                         "type": "string",
-                        "doc": "Parent associated with the schema field",
+                        "doc": "Dataset associated with the schema field",
                         "Searchable": {
                           "fieldType": "URN"
                         },
