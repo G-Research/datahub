@@ -46,7 +46,7 @@ export const PropertiesTab = () => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             columns={propertyTableColumns}
-            dataSource={entityData?.customProperties || undefined}
+            dataSource={entityData?.properties || undefined}
         />
     );
 };

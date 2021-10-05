@@ -43,7 +43,7 @@ export type GenericEntityProperties = {
     downstreamLineage?: Maybe<DownstreamEntityRelationships>;
     ownership?: Maybe<Ownership>;
     platform?: Maybe<DataPlatform>;
-    customProperties?: Maybe<StringMapEntry[]>;
+    properties?: Maybe<StringMapEntry[]>;
     institutionalMemory?: Maybe<InstitutionalMemory>;
     schemaMetadata?: Maybe<SchemaMetadata>;
     externalUrl?: Maybe<string>;
@@ -55,6 +55,7 @@ export type GenericEntityProperties = {
 };
 
 export type GenericEntityUpdate = {
+    urn: string;
     editableProperties?: Maybe<DatasetEditablePropertiesUpdate>;
     globalTags?: Maybe<GlobalTagsUpdate>;
     ownership?: Maybe<OwnershipUpdate>;
@@ -68,7 +69,6 @@ export type UpdateEntityType<U> = (
         | MutationFunctionOptions<
               U,
               {
-                  urn: string;
                   input: GenericEntityUpdate;
               }
           >

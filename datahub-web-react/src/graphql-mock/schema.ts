@@ -3,12 +3,10 @@ import { loader } from 'graphql.macro';
 import gql from 'graphql-tag';
 import { buildASTSchema } from 'graphql';
 
-const entitySchema = loader('../../../datahub-graphql-core/src/main/resources/entity.graphql');
-const searchSchema = loader('../../../datahub-graphql-core/src/main/resources/search.graphql');
+const gmsSchema = loader('../../../datahub-graphql-core/src/main/resources/gms.graphql');
 
 const graphQLSchemaAST = gql`
-    ${entitySchema}
-    ${searchSchema}
+    ${gmsSchema}
 `;
 
 export const graphQLSchema = buildASTSchema(graphQLSchemaAST);

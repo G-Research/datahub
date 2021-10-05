@@ -39,7 +39,6 @@ export default function CreateTagModal({
         const tagUrn = `urn:li:tag:${tagName}`;
         updateTagMutation({
             variables: {
-                urn: tagUrn,
                 input: {
                     urn: tagUrn,
                     name: tagName,
@@ -55,7 +54,7 @@ export default function CreateTagModal({
                             tagUrn,
                             resourceUrn: entityUrn,
                             subResource: entitySubresource,
-                            subResourceType: entitySubresource ? SubResourceType.DatasetField : null,
+                            subResourceType: entitySubresource ? SubResourceType.FieldPath : null,
                         },
                     },
                 }).finally(() => {

@@ -37,7 +37,7 @@ export default function UpdatableDescription({
         message.loading({ content: 'Updating...' });
         try {
             await updateEntity({
-                variables: { urn, input: { editableProperties: { description: description || '' } } },
+                variables: { input: { urn, editableProperties: { description: description || '' } } },
             });
             message.destroy();
             analytics.event({

@@ -19,6 +19,7 @@ query getChart($urn: String!) {
                     }
                 }
                 platformNativeType
+                tags
                 ownership {
                     ...ownershipFields
                 }
@@ -66,8 +67,8 @@ query getChart($urn: String!) {
     }
 }
 
-mutation updateChart($urn: String!, $input: ChartUpdateInput!) {
-    updateChart(urn: $urn, input: $input) {
+mutation updateChart($input: ChartUpdateInput!) {
+    updateChart(input: $input) {
         urn
         type
         tool
@@ -87,6 +88,7 @@ mutation updateChart($urn: String!, $input: ChartUpdateInput!) {
                     }
                 }
                 platformNativeType
+                tags
                 ownership {
                     ...ownershipFields
                 }

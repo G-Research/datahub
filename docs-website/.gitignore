@@ -1,9 +1,4 @@
-!.gitignore
-
-/genDocs/*
-
-# Generated GraphQL
-/graphql/combined.graphql
+/genDocs
 
 # Dependencies
 /node_modules

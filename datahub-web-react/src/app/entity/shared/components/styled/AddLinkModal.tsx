@@ -44,7 +44,7 @@ export const AddLinkModal = ({ buttonProps }: { buttonProps?: Record<string, unk
 
             try {
                 await updateEntity({
-                    variables: { urn, input: { institutionalMemory: { elements: newLinks } } },
+                    variables: { input: { urn, institutionalMemory: { elements: newLinks } } },
                 });
                 message.success({ content: 'Link Added', duration: 2 });
             } catch (e: unknown) {

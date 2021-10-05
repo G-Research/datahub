@@ -156,11 +156,10 @@ public class DatasetType implements SearchableEntityType<Dataset>, BrowsableEnti
     }
 
     @Override
-    public Dataset update(@Nonnull String urn, @Nonnull DatasetUpdateInput input, @Nonnull QueryContext context) throws Exception {
-        if (isAuthorized(urn, input, context)) {
+    public Dataset update(@Nonnull DatasetUpdateInput input, @Nonnull QueryContext context) throws Exception {
+        if (isAuthorized(input, context)) {
             final CorpuserUrn actor = CorpuserUrn.createFromString(context.getActor());
             final DatasetSnapshot datasetSnapshot = DatasetUpdateInputSnapshotMapper.map(input, actor);
-            datasetSnapshot.setUrn(DatasetUrn.createFromString(urn));
             final Snapshot snapshot = Snapshot.create(datasetSnapshot);
 
             try {
@@ -168,22 +167,22 @@ public class DatasetType implements SearchableEntityType<Dataset>, BrowsableEnti
                 entity.setValue(snapshot);
                 _datasetsClient.update(entity, context.getActor());
             } catch (RemoteInvocationException e) {
-                throw new RuntimeException(String.format("Failed to write entity with urn %s", urn), e);
+                throw new RuntimeException(String.format("Failed to write entity with urn %s", input.getUrn()), e);
             }
 
-            return load(urn, context).getData();
+            return load(input.getUrn(), context).getData();
         }
         throw new AuthorizationException("Unauthorized to perform this action. Please contact your DataHub administrator.");
     }
 
-    private boolean isAuthorized(@Nonnull String urn, @Nonnull DatasetUpdateInput update, @Nonnull QueryContext context) {
+    private boolean isAuthorized(@Nonnull DatasetUpdateInput update, @Nonnull QueryContext context) {
         // Decide whether the current principal should be allowed to update the Dataset.
         final DisjunctivePrivilegeGroup orPrivilegeGroups = getAuthorizedPrivileges(update);
         return AuthorizationUtils.isAuthorized(
             context.getAuthorizer(),
             context.getActor(),
             PoliciesConfig.DATASET_PRIVILEGES.getResourceType(),
-            urn,
+            update.getUrn(),
             orPrivilegeGroups);
     }
 

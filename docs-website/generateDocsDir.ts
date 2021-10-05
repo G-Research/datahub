@@ -126,7 +126,6 @@ const hardcoded_titles = {
 const sidebarsjs_hardcoded_titles = [
   "metadata-ingestion/README.md",
   "metadata-ingestion/source_docs/s3.md",
-  "docs/api/graphql/overview.md",
 ];
 const hardcoded_hide_title = ["README.md"];
 

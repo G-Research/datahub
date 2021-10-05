@@ -27,7 +27,7 @@ export default function useDescriptionRenderer(editableSchemaMetadata: EditableS
                                 description: updatedDescription,
                                 resourceUrn: urn,
                                 subResource: record.fieldPath,
-                                subResourceType: SubResourceType.DatasetField,
+                                subResourceType: SubResourceType.FieldPath,
                             },
                         },
                     }).then(refetch)

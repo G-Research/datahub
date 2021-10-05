@@ -32,6 +32,7 @@ import com.linkedin.ml.metadata.QuantitativeAnalyses;
 import com.linkedin.ml.metadata.TrainingData;
 import com.linkedin.metadata.key.MLModelKey;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
@@ -57,6 +58,7 @@ public class MLModelSnapshotMapper implements ModelMapper<MLModelSnapshot, MLMod
         result.setOrigin(FabricType.valueOf(mlModel.getUrn().getOriginEntity().toString()));
 
         ModelUtils.getAspectsFromSnapshot(mlModel).forEach(aspect -> {
+            result.setTags(new ArrayList<>());
             if (aspect instanceof Ownership) {
                 Ownership ownership = Ownership.class.cast(aspect);
                 result.setOwnership(OwnershipMapper.map(ownership));
@@ -73,9 +75,9 @@ public class MLModelSnapshotMapper implements ModelMapper<MLModelSnapshot, MLMod
                 if (modelProperties.getDescription() != null) {
                     result.setDescription(modelProperties.getDescription());
                 }
+                result.setTags(modelProperties.getTags());
             } else if (aspect instanceof GlobalTags) {
                 result.setGlobalTags(GlobalTagsMapper.map((GlobalTags) aspect));
-                result.setTags(GlobalTagsMapper.map((GlobalTags) aspect));
             } else if (aspect instanceof IntendedUse) {
                 IntendedUse intendedUse = IntendedUse.class.cast(aspect);
                 result.setIntendedUse(IntendedUseMapper.map(intendedUse));

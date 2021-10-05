@@ -18,18 +18,8 @@ export function getDataForEntityType<T>({
     if (!data) {
         return null;
     }
-    const entityData = data[entityType.toLowerCase()];
-    let modifiedEntityData = entityData;
-    // Bring 'customProperties' field to the root level.
-    if (entityData.properties?.customProperties) {
-        const customProperties = entityData.properties?.customProperties;
-        modifiedEntityData = {
-            ...entityData,
-            customProperties,
-        };
-    }
     return {
-        ...modifiedEntityData,
+        ...data[entityType.toLowerCase()],
         ...getOverrideProperties(data),
     };
 }

@@ -1,10 +1,12 @@
 package com.linkedin.datahub.graphql.types.dataset.mappers;
 
 import com.linkedin.common.AuditStamp;
+import com.linkedin.common.urn.DatasetUrn;
 import com.linkedin.data.template.SetMode;
 import com.linkedin.metadata.aspect.DatasetAspect;
 import com.linkedin.metadata.aspect.DatasetAspectArray;
 import com.linkedin.metadata.snapshot.DatasetSnapshot;
+import java.net.URISyntaxException;
 import javax.annotation.Nonnull;
 
 import com.linkedin.common.GlobalTags;
@@ -42,6 +44,13 @@ public class DatasetUpdateInputSnapshotMapper implements InputModelMapper<Datase
     auditStamp.setActor(actor, SetMode.IGNORE_NULL);
     auditStamp.setTime(System.currentTimeMillis());
 
+    try {
+      result.setUrn(DatasetUrn.createFromString(datasetUpdateInput.getUrn()));
+    } catch (URISyntaxException e) {
+      throw new IllegalArgumentException(
+          String.format("Failed to validate provided urn with value %s", datasetUpdateInput.getUrn()));
+    }
+
     final DatasetAspectArray aspects = new DatasetAspectArray();
 
     if (datasetUpdateInput.getOwnership() != null) {
@@ -64,22 +73,15 @@ public class DatasetUpdateInputSnapshotMapper implements InputModelMapper<Datase
       aspects.add(DatasetAspect.create(InstitutionalMemoryUpdateMapper.map(datasetUpdateInput.getInstitutionalMemory())));
     }
 
-    if (datasetUpdateInput.getTags() != null || datasetUpdateInput.getGlobalTags() != null) {
+    if (datasetUpdateInput.getGlobalTags() != null) {
       final GlobalTags globalTags = new GlobalTags();
-      if (datasetUpdateInput.getGlobalTags() != null) {
-        globalTags.setTags(new TagAssociationArray(datasetUpdateInput.getGlobalTags()
-            .getTags()
-            .stream()
-            .map(element -> TagAssociationUpdateMapper.map(element))
-            .collect(Collectors.toList())));
-      } else {
-        // Tags field overrides deprecated globalTags field
-        globalTags.setTags(new TagAssociationArray(datasetUpdateInput.getTags()
-            .getTags()
-            .stream()
-            .map(element -> TagAssociationUpdateMapper.map(element))
-            .collect(Collectors.toList())));
-      }
+      globalTags.setTags(
+          new TagAssociationArray(
+              datasetUpdateInput.getGlobalTags().getTags().stream().map(
+                  element -> TagAssociationUpdateMapper.map(element)
+              ).collect(Collectors.toList())
+          )
+      );
       aspects.add(DatasetAspect.create(globalTags));
     }
 

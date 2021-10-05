@@ -220,6 +220,8 @@ public class LabelUtils {
     TagAssociation newAssociation = new TagAssociation();
     newAssociation.setTag(TagUrn.createFromUrn(tagUrn));
     tagAssociationArray.add(newAssociation);
+
+    return;
   }
 
   public static boolean isAuthorizedToUpdateTags(@Nonnull QueryContext context, Urn targetUrn, String subResource) {

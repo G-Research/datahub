@@ -106,11 +106,10 @@ fragment nonRecursiveDatasetFields on Dataset {
         }
     }
     platformNativeType
+    tags
     properties {
-        customProperties {
-            key
-            value
-        }
+        key
+        value
     }
     editableProperties {
         description

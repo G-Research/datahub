@@ -237,7 +237,7 @@ public class GmsGraphQLEngine {
             .collect(Collectors.toList());
     }
 
-    public static String entitySchema() {
+    public static String schema() {
         String defaultSchemaString;
         try {
             InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(GMS_SCHEMA_FILE);
@@ -245,30 +245,6 @@ public class GmsGraphQLEngine {
             is.close();
         } catch (IOException e) {
             throw new RuntimeException("Failed to find GraphQL Schema with name " + GMS_SCHEMA_FILE, e);
-        }
-        return defaultSchemaString;
-    }
-
-    public static String searchSchema() {
-        String defaultSchemaString;
-        try {
-            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(SEARCH_SCHEMA_FILE);
-            defaultSchemaString = IOUtils.toString(is, StandardCharsets.UTF_8);
-            is.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to find GraphQL Schema with name " + SEARCH_SCHEMA_FILE, e);
-        }
-        return defaultSchemaString;
-    }
-
-    public static String appSchema() {
-        String defaultSchemaString;
-        try {
-            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(APP_SCHEMA_FILE);
-            defaultSchemaString = IOUtils.toString(is, StandardCharsets.UTF_8);
-            is.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to find GraphQL Schema with name " + APP_SCHEMA_FILE, e);
         }
         return defaultSchemaString;
     }
@@ -318,9 +294,7 @@ public class GmsGraphQLEngine {
 
     public GraphQLEngine.Builder builder() {
         return GraphQLEngine.builder()
-            .addSchema(entitySchema())
-            .addSchema(searchSchema())
-            .addSchema(appSchema())
+            .addSchema(schema())
             .addSchema(analyticsSchema())
             .addDataLoaders(loaderSuppliers(loadableTypes))
             .addDataLoader("Aspect", (context) -> createAspectLoader(context))

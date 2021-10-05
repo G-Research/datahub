@@ -173,32 +173,31 @@ public class ChartType implements SearchableEntityType<Chart>, BrowsableEntityTy
     }
 
     @Override
-    public Chart update(@Nonnull String urn, @Nonnull ChartUpdateInput input, @Nonnull QueryContext context) throws Exception {
-        if (isAuthorized(urn, input, context)) {
+    public Chart update(@Nonnull ChartUpdateInput input, @Nonnull QueryContext context) throws Exception {
+        if (isAuthorized(input, context)) {
             final CorpuserUrn actor = CorpuserUrn.createFromString(context.getActor());
             final ChartSnapshot chartSnapshot = ChartUpdateInputSnapshotMapper.map(input, actor);
-            chartSnapshot.setUrn(ChartUrn.createFromString(urn));
             final Snapshot snapshot = Snapshot.create(chartSnapshot);
 
             try {
                 _entityClient.update(new com.linkedin.entity.Entity().setValue(snapshot), context.getActor());
             } catch (RemoteInvocationException e) {
-                throw new RuntimeException(String.format("Failed to write entity with urn %s", urn), e);
+                throw new RuntimeException(String.format("Failed to write entity with urn %s", input.getUrn()), e);
             }
 
-            return load(urn, context).getData();
+            return load(input.getUrn(), context).getData();
         }
         throw new AuthorizationException("Unauthorized to perform this action. Please contact your DataHub administrator.");
     }
 
-    private boolean isAuthorized(@Nonnull String urn, @Nonnull ChartUpdateInput update, @Nonnull QueryContext context) {
+    private boolean isAuthorized(@Nonnull ChartUpdateInput update, @Nonnull QueryContext context) {
         // Decide whether the current principal should be allowed to update the Dataset.
         final DisjunctivePrivilegeGroup orPrivilegeGroups = getAuthorizedPrivileges(update);
         return AuthorizationUtils.isAuthorized(
             context.getAuthorizer(),
             context.getActor(),
             PoliciesConfig.CHART_PRIVILEGES.getResourceType(),
-            urn,
+            update.getUrn(),
             orPrivilegeGroups);
     }
 

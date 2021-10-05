@@ -13,8 +13,8 @@ query getDashboard($urn: String!) {
     }
 }
 
-mutation updateDashboard($urn: String!, $input: DashboardUpdateInput!) {
-    updateDashboard(urn: $urn, input: $input) {
+mutation updateDashboard($input: DashboardUpdateInput!) {
+    updateDashboard(input: $input) {
         ...dashboardFields
         editableProperties {
             description

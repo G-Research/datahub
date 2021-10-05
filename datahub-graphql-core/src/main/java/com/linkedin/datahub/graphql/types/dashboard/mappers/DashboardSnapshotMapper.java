@@ -8,7 +8,6 @@ import com.linkedin.datahub.graphql.generated.AccessLevel;
 import com.linkedin.datahub.graphql.generated.Chart;
 import com.linkedin.datahub.graphql.generated.Dashboard;
 import com.linkedin.datahub.graphql.generated.DashboardInfo;
-import com.linkedin.datahub.graphql.generated.DashboardProperties;
 import com.linkedin.datahub.graphql.generated.EntityType;
 import com.linkedin.datahub.graphql.generated.DashboardEditableProperties;
 import com.linkedin.datahub.graphql.types.common.mappers.AuditStampMapper;
@@ -43,7 +42,6 @@ public class DashboardSnapshotMapper implements ModelMapper<DashboardSnapshot, D
             if (aspect instanceof com.linkedin.dashboard.DashboardInfo) {
                 com.linkedin.dashboard.DashboardInfo info = com.linkedin.dashboard.DashboardInfo.class.cast(aspect);
                 result.setInfo(mapDashboardInfo(info));
-                result.setProperties(mapDashboardInfoToProperties(info));
             } else if (aspect instanceof Ownership) {
                 Ownership ownership = Ownership.class.cast(aspect);
                 result.setOwnership(OwnershipMapper.map(ownership));
@@ -52,7 +50,6 @@ public class DashboardSnapshotMapper implements ModelMapper<DashboardSnapshot, D
                 result.setStatus(StatusMapper.map(status));
             } else if (aspect instanceof GlobalTags) {
                 result.setGlobalTags(GlobalTagsMapper.map(GlobalTags.class.cast(aspect)));
-                result.setTags(GlobalTagsMapper.map(GlobalTags.class.cast(aspect)));
             } else if (aspect instanceof EditableDashboardProperties) {
                 final DashboardEditableProperties dashboardEditableProperties = new DashboardEditableProperties();
                 dashboardEditableProperties.setDescription(((EditableDashboardProperties) aspect).getDescription());
@@ -62,9 +59,6 @@ public class DashboardSnapshotMapper implements ModelMapper<DashboardSnapshot, D
         return result;
     }
 
-    /**
-     * Maps GMS {@link com.linkedin.dashboard.DashboardInfo} to deprecated GraphQL {@link DashboardInfo}
-     */
     private DashboardInfo mapDashboardInfo(final com.linkedin.dashboard.DashboardInfo info) {
         final DashboardInfo result = new DashboardInfo();
         result.setDescription(info.getDescription());
@@ -75,35 +69,6 @@ public class DashboardSnapshotMapper implements ModelMapper<DashboardSnapshot, D
             chart.setUrn(urn.toString());
             return chart;
         }).collect(Collectors.toList()));
-        if (info.hasExternalUrl()) {
-            result.setExternalUrl(info.getExternalUrl().toString());
-        } else if (info.hasDashboardUrl()) {
-            // TODO: Migrate to using the External URL field for consistency.
-            result.setExternalUrl(info.getDashboardUrl().toString());
-        }
-        if (info.hasCustomProperties()) {
-            result.setCustomProperties(StringMapMapper.map(info.getCustomProperties()));
-        }
-        if (info.hasAccess()) {
-            result.setAccess(AccessLevel.valueOf(info.getAccess().toString()));
-        }
-        result.setLastModified(AuditStampMapper.map(info.getLastModified().getLastModified()));
-        result.setCreated(AuditStampMapper.map(info.getLastModified().getCreated()));
-        if (info.getLastModified().hasDeleted()) {
-            result.setDeleted(AuditStampMapper.map(info.getLastModified().getDeleted()));
-        }
-        return result;
-    }
-
-    /**
-     * Maps GMS {@link com.linkedin.dashboard.DashboardInfo} to new GraphQL {@link DashboardProperties}
-     */
-    private DashboardProperties mapDashboardInfoToProperties(final com.linkedin.dashboard.DashboardInfo info) {
-        final DashboardProperties result = new DashboardProperties();
-        result.setDescription(info.getDescription());
-        result.setName(info.getTitle());
-        result.setLastRefreshed(info.getLastRefreshed());
-
         if (info.hasExternalUrl()) {
             result.setExternalUrl(info.getExternalUrl().toString());
         } else if (info.hasDashboardUrl()) {

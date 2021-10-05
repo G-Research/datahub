@@ -6,7 +6,6 @@ import com.linkedin.common.Status;
 import com.linkedin.datahub.graphql.generated.DataFlow;
 import com.linkedin.datahub.graphql.generated.DataFlowEditableProperties;
 import com.linkedin.datahub.graphql.generated.DataFlowInfo;
-import com.linkedin.datahub.graphql.generated.DataFlowProperties;
 import com.linkedin.datahub.graphql.generated.EntityType;
 import com.linkedin.datahub.graphql.types.common.mappers.OwnershipMapper;
 import com.linkedin.datahub.graphql.types.common.mappers.StatusMapper;
@@ -40,7 +39,6 @@ public class DataFlowSnapshotMapper implements ModelMapper<DataFlowSnapshot, Dat
             if (aspect instanceof com.linkedin.datajob.DataFlowInfo) {
                 com.linkedin.datajob.DataFlowInfo info = com.linkedin.datajob.DataFlowInfo.class.cast(aspect);
                 result.setInfo(mapDataFlowInfo(info));
-                result.setProperties(mapDataFlowInfoToProperties(info));
             } else if (aspect instanceof Ownership) {
                 Ownership ownership = Ownership.class.cast(aspect);
                 result.setOwnership(OwnershipMapper.map(ownership));
@@ -49,7 +47,6 @@ public class DataFlowSnapshotMapper implements ModelMapper<DataFlowSnapshot, Dat
                 result.setStatus(StatusMapper.map(status));
             } else if (aspect instanceof GlobalTags) {
                 result.setGlobalTags(GlobalTagsMapper.map(GlobalTags.class.cast(aspect)));
-                result.setTags(GlobalTagsMapper.map(GlobalTags.class.cast(aspect)));
             } else if (aspect instanceof EditableDataFlowProperties) {
                 final DataFlowEditableProperties dataFlowEditableProperties = new DataFlowEditableProperties();
                 dataFlowEditableProperties.setDescription(((EditableDataFlowProperties) aspect).getDescription());
@@ -59,28 +56,8 @@ public class DataFlowSnapshotMapper implements ModelMapper<DataFlowSnapshot, Dat
         return result;
     }
 
-    /**
-     * Maps GMS {@link com.linkedin.datajob.DataFlowInfo} to deprecated GraphQL {@link DataFlowInfo}
-     */
     private DataFlowInfo mapDataFlowInfo(final com.linkedin.datajob.DataFlowInfo info) {
         final DataFlowInfo result = new DataFlowInfo();
-        result.setName(info.getName());
-        result.setDescription(info.getDescription());
-        result.setProject(info.getProject());
-        if (info.hasExternalUrl()) {
-            result.setExternalUrl(info.getExternalUrl().toString());
-        }
-        if (info.hasCustomProperties()) {
-            result.setCustomProperties(StringMapMapper.map(info.getCustomProperties()));
-        }
-        return result;
-    }
-
-    /**
-     * Maps GMS {@link com.linkedin.datajob.DataFlowInfo} to new GraphQL {@link DataFlowProperties}
-     */
-    private DataFlowProperties mapDataFlowInfoToProperties(final com.linkedin.datajob.DataFlowInfo info) {
-        final DataFlowProperties result = new DataFlowProperties();
         result.setName(info.getName());
         result.setDescription(info.getDescription());
         result.setProject(info.getProject());

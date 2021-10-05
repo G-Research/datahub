@@ -53,7 +53,7 @@ export const DataFlowProfile = ({ urn }: { urn: string }): JSX.Element => {
                                 entityType: EntityType.DataFlow,
                                 entityUrn: urn,
                             });
-                            return updateDataFlow({ variables: { urn, input: { ownership: update } } });
+                            return updateDataFlow({ variables: { input: { urn, ownership: update } } });
                         }}
                     />
                 ),
